@@ -1,6 +1,5 @@
 node_modules/
-packages/core/*
-packages/xades/*
+packages/**/build/*
 lib/
 .nyc_output/
 coverage/

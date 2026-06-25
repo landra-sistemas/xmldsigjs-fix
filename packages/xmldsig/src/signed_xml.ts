@@ -38,14 +38,14 @@ export interface OptionsXPathSignTransform {
 }
 
 export type OptionsSignTransform =
-  | 'enveloped'
-  | 'c14n'
-  | 'exc-c14n'
-  | 'c14n-com'
-  | 'exc-c14n-com'
-  | 'base64'
-  | OptionsXPathSignTransform
-  | string; // Allow custom transform namespace URIs
+| 'enveloped'
+| 'c14n'
+| 'exc-c14n'
+| 'c14n-com'
+| 'exc-c14n-com'
+| 'base64'
+| OptionsXPathSignTransform
+| string; // Allow custom transform namespace URIs
 
 export type DigestReferenceSource = Element | BufferSource;
 
@@ -56,56 +56,56 @@ export interface OptionsVerify {
 
 export interface OptionsSignReference {
   /**
-   * Id of Reference
-   *
-   * @type {string}
-   * @memberOf OptionsSignReference
-   */
+  * Id of Reference
+  *
+  * @type {string}
+  * @memberOf OptionsSignReference
+  */
   id?: string;
   uri?: string;
   type?: string;
   /**
-   * Hash algorithm
-   */
+  * Hash algorithm
+  */
   hash: AlgorithmIdentifier;
   /**
-   * List of transforms
-   */
+  * List of transforms
+  */
   transforms?: OptionsSignTransform[];
 }
 
 export interface OptionsSign {
   /**
-   * Id of Signature
-   */
+  * Id of Signature
+  */
   id?: string;
   /**
-   * Public key for KeyInfo block
-   *
-   * @type {boolean}
-   * @memberOf OptionsSign
-   */
+  * Public key for KeyInfo block
+  *
+  * @type {boolean}
+  * @memberOf OptionsSign
+  */
   keyValue?: CryptoKey;
   /**
-   * List of X509 Certificates
-   *
-   * @type {string[]}
-   * @memberOf OptionsSign
-   */
+  * List of X509 Certificates
+  *
+  * @type {string[]}
+  * @memberOf OptionsSign
+  */
   x509?: string[];
   /**
-   * List of Reference
-   * Default is Reference with hash alg SHA-256 and exc-c14n transform
-   *
-   * @type {OptionsSignReference[]}
-   * @memberOf OptionsSign
-   */
+  * List of Reference
+  * Default is Reference with hash alg SHA-256 and exc-c14n transform
+  *
+  * @type {OptionsSignReference[]}
+  * @memberOf OptionsSign
+  */
   references?: OptionsSignReference[];
 }
 
 /**
- * Provides a wrapper on a core XML signature object to facilitate creating XML signatures.
- */
+* Provides a wrapper on a core XML signature object to facilitate creating XML signatures.
+*/
 export class SignedXml implements IXmlSerializable {
   public get XmlSignature() {
     return this.signature;
@@ -126,20 +126,20 @@ export class SignedXml implements IXmlSerializable {
   protected signature = new Signature();
   protected document?: Document;
   /**
-   * If set to true, transformations with comments will be replaced with transformations
-   * without comments.
-   * This is a non-standard implementation to ensure compatibility with systems that do not support
-   * canonicalization with comments.
-   */
+  * If set to true, transformations with comments will be replaced with transformations
+  * without comments.
+  * This is a non-standard implementation to ensure compatibility with systems that do not support
+  * canonicalization with comments.
+  */
   public replaceCanonicalization = false;
 
   /**
-   * Creates an instance of SignedXml.
-   *
-   * @param {(Document | Element)} [node]
-   *
-   * @memberOf SignedXml
-   */
+  * Creates an instance of SignedXml.
+  *
+  * @param {(Document | Element)} [node]
+  *
+  * @memberOf SignedXml
+  */
   constructor(node?: Document | Element) {
     // constructor();
     if (node && (node as Node).nodeType === XmlNodeType.Document) {
@@ -235,10 +235,10 @@ export class SignedXml implements IXmlSerializable {
   }
 
   /**
-   * Loads a SignedXml state from an XML element.
-   * @param  {Element | string} value The XML to load the SignedXml state from.
-   * @returns void
-   */
+  * Loads a SignedXml state from an XML element.
+  * @param  {Element | string} value The XML to load the SignedXml state from.
+  * @returns void
+  */
   public LoadXml(value: Element | string) {
     this.signature = Signature.LoadXml(value);
 
@@ -252,12 +252,12 @@ export class SignedXml implements IXmlSerializable {
     // Check for EnvelopedTransform
     const signature = this.XmlSignature;
     const enveloped =
-      signature.SignedInfo.References &&
-      signature.SignedInfo.References.Some(
-        (r) =>
-          r.Transforms &&
-          r.Transforms.Some((t) => t instanceof Transforms.XmlDsigEnvelopedSignatureTransform),
-      );
+    signature.SignedInfo.References &&
+    signature.SignedInfo.References.Some(
+      (r) =>
+        r.Transforms &&
+      r.Transforms.Some((t) => t instanceof Transforms.XmlDsigEnvelopedSignatureTransform),
+    );
 
     if (enveloped) {
       if (!this.document) {
@@ -277,8 +277,8 @@ export class SignedXml implements IXmlSerializable {
 
   // #region Protected methods
   /**
-   * Returns the public key of a signature.
-   */
+  * Returns the public key of a signature.
+  */
   protected async GetPublicKeys() {
     const keys: CryptoKey[] = [];
 
@@ -321,8 +321,8 @@ export class SignedXml implements IXmlSerializable {
   }
 
   /**
-   * Returns dictionary of namespaces used in signature
-   */
+  * Returns dictionary of namespaces used in signature
+  */
   protected GetSignatureNamespaces(): AssocArray<string> {
     const namespaces: AssocArray<string> = {};
     if (this.XmlSignature.NamespaceURI) {
@@ -332,16 +332,16 @@ export class SignedXml implements IXmlSerializable {
   }
 
   /**
-   * Copies namespaces from source element and its parents into destination element
-   */
+  * Copies namespaces from source element and its parents into destination element
+  */
   protected CopyNamespaces(src: Element, dst: Element, ignoreDefault: boolean): void {
     // this.InjectNamespaces(XmlCore.SelectNamespaces(src), dst, ignoreDefault);
     this.InjectNamespaces(SelectRootNamespaces(src), dst, ignoreDefault);
   }
 
   /**
-   * Injects namespaces from dictionary to the target element
-   */
+  * Injects namespaces from dictionary to the target element
+  */
   protected InjectNamespaces(
     namespaces: Record<string, string>,
     target: Element,
@@ -576,24 +576,24 @@ export class SignedXml implements IXmlSerializable {
     if (typeof transform === 'string') {
       switch (transform) {
         case 'enveloped':
-          return new Transforms.XmlDsigEnvelopedSignatureTransform();
+        return new Transforms.XmlDsigEnvelopedSignatureTransform();
         case 'c14n':
-          return new Transforms.XmlDsigC14NTransform();
+        return new Transforms.XmlDsigC14NTransform();
         case 'c14n-com':
-          return new Transforms.XmlDsigC14NWithCommentsTransform();
+        return new Transforms.XmlDsigC14NWithCommentsTransform();
         case 'exc-c14n':
-          return new Transforms.XmlDsigExcC14NTransform();
+        return new Transforms.XmlDsigExcC14NTransform();
         case 'exc-c14n-com':
-          return new Transforms.XmlDsigExcC14NWithCommentsTransform();
+        return new Transforms.XmlDsigExcC14NWithCommentsTransform();
         case 'base64':
-          return new Transforms.XmlDsigBase64Transform();
+        return new Transforms.XmlDsigBase64Transform();
         default:
-          // Try to create transform using CryptoConfig for custom transforms
-          try {
-            return CryptoConfig.CreateFromName(transform);
-          } catch {
-            throw new XmlError(XE.CRYPTOGRAPHIC_UNKNOWN_TRANSFORM, transform);
-          }
+        // Try to create transform using CryptoConfig for custom transforms
+        try {
+          return CryptoConfig.CreateFromName(transform);
+        } catch {
+          throw new XmlError(XE.CRYPTOGRAPHIC_UNKNOWN_TRANSFORM, transform);
+        }
       }
     }
 
@@ -618,7 +618,7 @@ export class SignedXml implements IXmlSerializable {
         return xpathTransform;
       }
       default:
-        throw new XmlError(XE.CRYPTOGRAPHIC_UNKNOWN_TRANSFORM, transform.name);
+      throw new XmlError(XE.CRYPTOGRAPHIC_UNKNOWN_TRANSFORM, transform.name);
     }
   }
 
@@ -626,40 +626,55 @@ export class SignedXml implements IXmlSerializable {
     let output: any = null;
 
     transforms
-      .Sort((a, b) => {
-        const c14nTransforms = [
-          Transforms.XmlDsigC14NTransform,
-          XmlDsigC14NWithCommentsTransform,
-          Transforms.XmlDsigExcC14NTransform,
-          XmlDsigExcC14NWithCommentsTransform,
-        ];
-        if (c14nTransforms.some((t) => a instanceof t)) {
-          return 1;
+    .Sort((a, b) => {
+      const c14nTransforms = [
+        Transforms.XmlDsigC14NTransform,
+        XmlDsigC14NWithCommentsTransform,
+        Transforms.XmlDsigExcC14NTransform,
+        XmlDsigExcC14NWithCommentsTransform,
+      ];
+      if (c14nTransforms.some((t) => a instanceof t)) {
+        return 1;
+      }
+      if (c14nTransforms.some((t) => b instanceof t)) {
+        return -1;
+      }
+      return 0;
+    })
+    .ForEach((transform) => {
+      // Non-standard implementation: If enforceCanonicalization is set to true,
+      // we replace transformations with comments with transformations without comments.
+      // This is done to ensure compatibility with systems that do not support
+      // canonicalization with comments.
+
+
+
+      if (this.replaceCanonicalization) {
+        if (transform instanceof Transforms.XmlDsigExcC14NWithCommentsTransform) {
+          transform = new Transforms.XmlDsigExcC14NTransform();
+        } else if (transform instanceof Transforms.XmlDsigC14NWithCommentsTransform) {
+          transform = new Transforms.XmlDsigC14NTransform();
         }
-        if (c14nTransforms.some((t) => b instanceof t)) {
-          return -1;
-        }
-        return 0;
-      })
-      .ForEach((transform) => {
-        // Non-standard implementation: If enforceCanonicalization is set to true,
-        // we replace transformations with comments with transformations without comments.
-        // This is done to ensure compatibility with systems that do not support
-        // canonicalization with comments.
-        if (this.replaceCanonicalization) {
-          if (transform instanceof Transforms.XmlDsigExcC14NWithCommentsTransform) {
-            transform = new Transforms.XmlDsigExcC14NTransform();
-          } else if (transform instanceof Transforms.XmlDsigC14NWithCommentsTransform) {
-            transform = new Transforms.XmlDsigC14NTransform();
-          }
-        }
-        transform.LoadInnerXml(input);
-        if (transform instanceof Transforms.XmlDsigXPathTransform) {
-          transform.GetOutput();
-        } else {
-          output = transform.GetOutput();
-        }
-      });
+      }
+      const transformXml = transform.GetXml?.();
+      const inclusiveNs = transformXml?.getElementsByTagNameNS(
+        "http://www.w3.org/2001/10/xml-exc-c14n#",
+        "InclusiveNamespaces"
+      )[0]?.getAttribute("PrefixList");
+
+      if (inclusiveNs && transform instanceof Transforms.XmlDsigExcC14NTransform) {
+        (transform as any).InclusiveNamespacesPrefixList = inclusiveNs;
+      }
+      if (transformXml) {
+        transform.LoadXml(transformXml);
+      }
+      transform.LoadInnerXml(input);
+      if (transform instanceof Transforms.XmlDsigXPathTransform) {
+        transform.GetOutput();
+      } else {
+        output = transform.GetOutput();
+      }
+    });
     // Apply C14N transform if Reference has only one transform EnvelopedSignature
     if (
       transforms.Count === 1 &&
@@ -836,12 +851,12 @@ function findAllByIdExcludingSignatures(element: Element, id: string, results: E
 }
 
 /**
- * Adding new namespace to assoc array.
- * If `name` exists in array then ignore it
- * @param selectedNodes assoc array of namespaces
- * @param name          name of namespace
- * @param namespace     namespace value
- */
+* Adding new namespace to assoc array.
+* If `name` exists in array then ignore it
+* @param selectedNodes assoc array of namespaces
+* @param name          name of namespace
+* @param namespace     namespace value
+*/
 function addNamespace(selectedNodes: AssocArray<string>, name: string, namespace: string) {
   if (!(name in selectedNodes)) {
     selectedNodes[name] = namespace;
