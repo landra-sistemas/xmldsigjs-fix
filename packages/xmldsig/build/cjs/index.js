@@ -2,6 +2,15 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.XmlChildElement = exports.XmlElement = exports.Stringify = exports.Parse = exports.Select = void 0;
 const tslib_1 = require("tslib");
+const xmlCore = tslib_1.__importStar(require("xml-core"));
+const xmldom_1 = require("@xmldom/xmldom");
+if (!xmlCore.__initialized) {
+    xmlCore.setNodeDependencies({
+        DOMParser: xmldom_1.DOMParser,
+        XMLSerializer: xmldom_1.XMLSerializer,
+    });
+    xmlCore.__initialized = true;
+}
 tslib_1.__exportStar(require("./algorithm.js"), exports);
 tslib_1.__exportStar(require("./algorithms/index.js"), exports);
 tslib_1.__exportStar(require("./application.js"), exports);
