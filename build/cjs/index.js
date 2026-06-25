@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.XmlChildElement = exports.XmlElement = exports.Stringify = exports.Parse = exports.Select = void 0;
 const tslib_1 = require("tslib");
+require("./init.js");
 tslib_1.__exportStar(require("./algorithm.js"), exports);
 tslib_1.__exportStar(require("./algorithms/index.js"), exports);
 tslib_1.__exportStar(require("./application.js"), exports);
