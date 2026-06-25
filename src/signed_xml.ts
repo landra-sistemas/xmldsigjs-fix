@@ -655,8 +655,8 @@ export class SignedXml implements IXmlSerializable {
         }
 
         const transformXml = transform.GetXml?.();
-          if (transformXml) {
-            transform.LoadXml(transformXml);
+        if (transformXml) {
+          transform.LoadXml(transformXml);
         }
 
         transform.LoadInnerXml(input);

@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SignedXml = void 0;
-exports.SelectRootNamespaces = SelectRootNamespaces;
+exports.SelectRootNamespaces = exports.SignedXml = void 0;
 const tslib_1 = require("tslib");
 const xml_core_1 = require("xml-core");
 const pvtsutils_1 = require("pvtsutils");
@@ -393,6 +392,10 @@ class SignedXml {
                     transform = new Transforms.XmlDsigC14NTransform();
                 }
             }
+            const transformXml = transform.GetXml?.();
+            if (transformXml) {
+                transform.LoadXml(transformXml);
+            }
             transform.LoadInnerXml(input);
             if (transform instanceof Transforms.XmlDsigXPathTransform) {
                 transform.GetOutput();
@@ -548,3 +551,4 @@ function SelectRootNamespaces(node) {
     _SelectRootNamespaces(node, attrs);
     return attrs;
 }
+exports.SelectRootNamespaces = SelectRootNamespaces;

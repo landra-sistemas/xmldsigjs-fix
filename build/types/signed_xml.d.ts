@@ -67,7 +67,7 @@ export declare class SignedXml implements IXmlSerializable {
     Parent?: Element | XmlObject;
     Key?: CryptoKey;
     Algorithm?: Algorithm | RsaPssParams | EcdsaParams;
-    get Signature(): Uint8Array<ArrayBufferLike> | null;
+    get Signature(): Uint8Array | null;
     protected signature: Signature;
     protected document?: Document;
     /**
@@ -112,7 +112,7 @@ export declare class SignedXml implements IXmlSerializable {
      * Injects namespaces from dictionary to the target element
      */
     protected InjectNamespaces(namespaces: Record<string, string>, target: Element, ignoreDefault: boolean): void;
-    protected DigestReference(source: DigestReferenceSource, reference: Reference, _checkHmac: boolean): Promise<Uint8Array<ArrayBufferLike>>;
+    protected DigestReference(source: DigestReferenceSource, reference: Reference, _checkHmac: boolean): Promise<Uint8Array>;
     protected DigestReferences(data: DigestReferenceSource): Promise<void>;
     protected TransformSignedInfo(data?: Element | Document | BufferSource): string;
     protected ResolveTransform(transform: OptionsSignTransform): XmlTransform;
