@@ -1,62 +1,183 @@
-# XMLDSIG Monorepo
-
-[![CI](https://github.com/PeculiarVentures/xmldsigjs/actions/workflows/ci.yml/badge.svg)](https://github.com/PeculiarVentures/xmldsigjs/actions/workflows/ci.yml)
-
-[![license](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://raw.githubusercontent.com/PeculiarVentures/xmldsigjs/master/LICENSE)
-
-A TypeScript/JavaScript implementation of XML security standards using Web Crypto API for both browsers and Node.js.
-
-## Packages
-
-This monorepo contains three interconnected packages:
-
-### [xml-core](./packages/core/README.md)
-
-![NPM License](https://img.shields.io/npm/l/xml-core)
-![NPM Version](https://img.shields.io/npm/v/xml-core)
-![NPM Downloads](https://img.shields.io/npm/dm/xml-core?label=npm)
-
-A foundational library for working with XML in JavaScript/TypeScript with schema validation through decorators.
-
-### [xmldsigjs](./packages/xmldsig/README.md)
+# XMLDSIGjs
 
 ![NPM License](https://img.shields.io/npm/l/xmldsigjs)
 ![NPM Version](https://img.shields.io/npm/v/xmldsigjs)
 ![NPM Downloads](https://img.shields.io/npm/dm/xmldsigjs?label=npm)
 
-XML Digital Signature implementation based on Web Crypto API with support for various cryptographic algorithms and canonicalization methods.
-
-### [xadesjs](./packages/xades/README.md)
-
-![NPM License](https://img.shields.io/npm/l/xadesjs)
-![NPM Version](https://img.shields.io/npm/v/xadesjs)
-![NPM Downloads](https://img.shields.io/npm/dm/xadesjs?label=npm)
-
-XML Advanced Electronic Signatures (XAdES) implementation that extends XMLDSIGjs with additional signature formats and metadata.
+XML Digital Signature implementation in TypeScript/JavaScript using Web Crypto API.
 
 ## Installation
 
-Each package can be installed independently:
-
 ```bash
-npm install xml-core        # Core XML utilities
-npm install xmldsigjs       # XML Digital Signatures
-npm install xadesjs         # XML Advanced Electronic Signatures
+npm install xmldsigjs
 ```
 
-## Platform Support
+## Features
 
-All packages work in:
+- Complete XMLDSIG implementation
+- Support for RSA, ECDSA, and HMAC algorithms
+- Multiple canonicalization methods
+- Cross-platform: browsers and Node.js
+- TypeScript support
 
-- Modern browsers with Web Crypto API support
-- Node.js WebCrypto ([official API](https://nodejs.org/api/webcrypto.html)) and Web Crypto polyfills ([webcrypto](https://github.com/PeculiarVentures/webcrypto))
-- Hardware Security Modules via [node-webcrypto-p11](https://github.com/PeculiarVentures/node-webcrypto-p11)
+## Algorithm Support
+
+### Cryptographic Algorithms
+
+|                   | SHA1 | SHA2-256 | SHA2-384 | SHA2-512 |
+| ----------------- | ---- | -------- | -------- | -------- |
+| RSASSA-PKCS1-v1_5 | ✓    | ✓        | ✓        | ✓        |
+| RSA-PSS           | ✓    | ✓        | ✓        | ✓        |
+| ECDSA             | ✓    | ✓        | ✓        | ✓        |
+| HMAC              | ✓    | ✓        | ✓        | ✓        |
+
+### Canonicalization
+
+- C14N (Canonical XML)
+- C14N with Comments
+- Exclusive C14N
+- Exclusive C14N with Comments
+- Enveloped Signature Transform
+- Base64 Transform
+
+## Quick Start
+
+### Node.js Setup
+
+> **Note:** Use ESM modules (`.mjs` extension or `"type": "module"` in `package.json`).
+
+```javascript
+import * as xmldsigjs from 'xmldsigjs';
+import { Crypto } from '@peculiar/webcrypto';
+
+xmldsigjs.Application.setEngine('NodeJS', new Crypto());
+```
+
+### Browser Setup
+
+```html
+<script type="module">
+import * as xmldsigjs from "https://unpkg.com/xmldsigjs@latest/dist/esm/index.js";
+</script>
+```
+
+### Signing XML
+
+```javascript
+import * as xmldsigjs from 'xmldsigjs';
+import { Crypto } from '@peculiar/webcrypto';
+
+xmldsigjs.Application.setEngine('NodeJS', new Crypto());
+
+async function signXML() {
+  // Generate key pair
+  const keys = await crypto.subtle.generateKey(
+    {
+      name: "RSASSA-PKCS1-v1_5",
+      modulusLength: 2048,
+      publicExponent: new Uint8Array([1, 0, 1]),
+      hash: "SHA-256"
+    },
+    false,
+    ["sign", "verify"]
+  );
+
+  // Parse XML document
+  const xml = xmldsigjs.Parse('<root><data>Hello World</data></root>');
+
+  // Create signature
+  const signedXml = new xmldsigjs.SignedXml();
+  await signedXml.Sign(
+    { name: "RSASSA-PKCS1-v1_5" },
+    keys.privateKey,
+    xml,
+    {
+      keyValue: keys.publicKey,
+      references: [{ hash: "SHA-256", transforms: ["enveloped", "c14n"] }]
+    }
+  );
+
+  console.log(signedXml.toString());
+}
+```
+
+### Verifying XML
+
+```javascript
+import * as xmldsigjs from 'xmldsigjs';
+
+async function verifyXML(signedXmlString) {
+  const doc = xmldsigjs.Parse(signedXmlString);
+  const signatures = doc.getElementsByTagNameNS(
+    'http://www.w3.org/2000/09/xmldsig#',
+    'Signature'
+  );
+
+  const signedXml = new xmldsigjs.SignedXml(doc);
+  signedXml.LoadXml(signatures[0]);
+
+  const isValid = await signedXml.Verify();
+  console.log('Signature valid:', isValid);
+}
+```
+
+## API Reference
+
+### SignedXml.Sign()
+
+```typescript
+Sign(
+  algorithm: Algorithm,
+  key: CryptoKey,
+  data: Document,
+  options?: OptionsSign
+): Promise<Signature>
+```
+
+**Options:**
+
+```typescript
+interface OptionsSign {
+  id?: string;                          // Signature ID
+  keyValue?: CryptoKey;                 // Public key for KeyInfo
+  x509?: string[];                      // X.509 certificates
+  references?: OptionsSignReference[];  // Reference elements
+}
+```
+
+### SignedXml.Verify()
+
+```typescript
+Verify(key?: CryptoKey): Promise<boolean>
+```
+
+## Node.js: Registering XML Dependencies
+
+To work with XML in Node.js, you need to register DOM and XPath dependencies:
+
+```typescript
+import * as xmldom from '@xmldom/xmldom';
+import { setNodeDependencies } from 'xmldsigjs';
+import xpath from 'xpath';
+
+setNodeDependencies({
+  XMLSerializer: xmldom.XMLSerializer,
+  DOMParser: xmldom.DOMParser,
+  DOMImplementation: xmldom.DOMImplementation,
+  xpath,
+});
+```
+
+## WebCrypto Environment
+
+Node.js >=19 ships a built‑in WebCrypto. For Node.js 16/18 or to ensure consistent behavior across environments, you can use:
+
+```ts
+import { Crypto } from '@peculiar/webcrypto';
+import { Application } from 'xmldsigjs';
+Application.setEngine('NodeJS', new Crypto());
+```
 
 ## License
 
-MIT License. See individual package directories for specific license files.
-
-## Related Projects
-
-- [@peculiar/webcrypto](https://github.com/PeculiarVentures/webcrypto)
-- [node-webcrypto-p11](https://github.com/PeculiarVentures/node-webcrypto-p11)
+MIT

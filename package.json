@@ -1,37 +1,9 @@
+
 {
+  "name": "xmldsigjs",
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
-  "scripts": {
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "lint": "eslint",
-    "test": "vitest run",
-    "build": "lerna run build",
-    "coverage": "vitest run --coverage"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/PeculiarVentures/xmldsigjs.git"
-  },
-  "author": "Peculiar Ventures LLC",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/PeculiarVentures/xmldsigjs/issues"
-  },
-  "homepage": "https://github.com/PeculiarVentures/xmldsigjs#readme",
-  "devDependencies": {
-    "@peculiar/eslint-config-base": "^0.2.9",
-    "@peculiar/webcrypto": "^1.5.0",
-    "@types/node": "^24.7.2",
-    "@vitest/coverage-v8": "^4.0.15",
-    "eslint-import-resolver-typescript": "^4.4.4",
-    "lerna": "^9.0.7",
-    "prettier": "^3.7.4",
-    "rimraf": "^6.1.2",
-    "typescript": "^5.7.3",
-    "vite-tsconfig-paths": "^6.0.1",
-    "vitest": "^4.0.15"
-  }
+  "version": "2.8.7-wsu-fix",
+  "main": "build/cjs/index.js",
+  "module": "build/esm/index.js",
+  "types": "build/types/index.d.ts"
 }
