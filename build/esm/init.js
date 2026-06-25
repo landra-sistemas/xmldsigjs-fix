@@ -1,9 +1,9 @@
 import * as xmlCore from "xml-core";
 import { DOMParser, XMLSerializer } from "@xmldom/xmldom";
-if (!xmlCore.__initialized) {
+if (!globalThis.__xmlCoreInitialized) {
     xmlCore.setNodeDependencies({
         DOMParser,
         XMLSerializer,
     });
-    xmlCore.__initialized = true;
+    globalThis.__xmlCoreInitialized = true;
 }
