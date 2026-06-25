@@ -653,6 +653,12 @@ export class SignedXml implements IXmlSerializable {
             transform = new Transforms.XmlDsigC14NTransform();
           }
         }
+
+        const transformXml = transform.GetXml?.();
+          if (transformXml) {
+            transform.LoadXml(transformXml);
+        }
+
         transform.LoadInnerXml(input);
         if (transform instanceof Transforms.XmlDsigXPathTransform) {
           transform.GetOutput();
