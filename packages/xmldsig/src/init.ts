@@ -2,11 +2,11 @@
 import * as xmlCore from "xml-core";
 import { DOMParser, XMLSerializer } from "@xmldom/xmldom";
 
-if (!(xmlCore as any).__initialized) {
+if (!(globalThis as any).__xmlCoreInitialized) {
   xmlCore.setNodeDependencies({
     DOMParser,
     XMLSerializer,
   });
 
-  (xmlCore as any).__initialized = true;
+  (globalThis as any).__xmlCoreInitialized = true;
 }
