@@ -802,7 +802,7 @@ function findAllById(
 
   // xmldsigjs historically accepts different ID attribute casings
   // (e.g. `Id` in XMLDSIG/XAdES, `id` in some XML payloads)
-  const idAttrNames = ['Id', 'ID', 'id'];
+  const idAttrNames = ['Id', 'ID', 'id', 'wsu:Id'];
   for (const attrName of idAttrNames) {
     if (element.hasAttribute(attrName) && element.getAttribute(attrName) === id) {
       results.push(element);
