@@ -1,3 +1,4 @@
+import './init.js'
 export * from './algorithm.js';
 export * from './algorithms/index.js';
 export * from './application.js';
